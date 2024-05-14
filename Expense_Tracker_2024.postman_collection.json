@@ -1,0 +1,332 @@
+{
+	"info": {
+		"_postman_id": "9e4e7bda-a0fe-4637-abe5-b9b10bfcc3c5",
+		"name": "Expense_Tracker_2024",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10601782"
+	},
+	"item": [
+		{
+			"name": "Api-Chaining",
+			"item": [
+				{
+					"name": "Add_Expense",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"end-point\", \"http://127.0.0.1:8000/expenses\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Test data type of the expense id\", () => {\r",
+									"  pm.expect(jsonData.expense_id).to.be.a(\"number\");\r",
+									"})\r",
+									"console.log(jsonData.expense_id)\r",
+									"\r",
+									"//setting expense id in variable\r",
+									"pm.environment.set(\"exp_id\", jsonData.expense_id)\r",
+									"\r",
+									"//Check status code\r",
+									"pm.test(\"status code\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"    //pm.expect(pm.response.code).to.eql(200);\r",
+									"})\r",
+									"\r",
+									"//Check Response Message\r",
+									"pm.test(\"Response Message\", function(){\r",
+									"    pm.expect(jsonData.message).to.eql(\"Expense inserted successfully\")\r",
+									"})\r",
+									"\r",
+									"//Check content-type\r",
+									"pm.test(\"Content-Type header is present\", () => {\r",
+									"  pm.response.to.have.header(\"Content-Type\");\r",
+									"});\r",
+									"\r",
+									"//Check response time\r",
+									"pm.test(\"Response time is less than 200ms\", () => {\r",
+									"  pm.expect(pm.response.responseTime).to.be.below(200);\r",
+									"});\r",
+									"\r",
+									"//Assert value type\r",
+									"pm.test(\"Test data type of the response\", () => {\r",
+									"  pm.expect(jsonData).to.be.an(\"object\");\r",
+									"  pm.expect(jsonData.expense_id).to.be.a(\"number\");\r",
+									"  pm.expect(jsonData.expense_type).to.be.a(\"string\");\r",
+									"  pm.expect(jsonData.description).to.be.a(\"string\");\r",
+									"  pm.expect(jsonData.amount).to.be.a(\"number\");\r",
+									"  pm.expect(jsonData.paid_by).to.be.an(\"string\");\r",
+									"  pm.expect(jsonData.expense_date).to.be.a(\"string\");\r",
+									"  pm.expect(jsonData.expense_source).to.be.a('string');\r",
+									"  pm.expect(jsonData.created_date).to.be.a(\"string\");\r",
+									"});\r",
+									"\r",
+									"//Check Cookie\r",
+									"// pm.test(\"Cookie isLoggedIn is present\", () => {\r",
+									"//   pm.expect(pm.cookies.has('isLoggedIn')).to.be.true;\r",
+									"// });\r",
+									"\r",
+									"var schema = {\r",
+									"  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\r",
+									"  \"type\": \"object\",\r",
+									"  \"properties\": {\r",
+									"    \"expense_id\": {\r",
+									"      \"type\": \"integer\"\r",
+									"    },\r",
+									"    \"expense_type\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"description\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"amount\": {\r",
+									"      \"type\": \"number\"\r",
+									"    },\r",
+									"    \"paid_by\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"expense_date\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"expense_source\": {\r",
+									"      \"type\": \"string\"\r",
+									"    },\r",
+									"    \"created_date\": {\r",
+									"      \"type\": \"string\"\r",
+									"    }\r",
+									"  },\r",
+									"  \"required\": [\r",
+									"    \"expense_id\",\r",
+									"    \"expense_type\",\r",
+									"    \"description\",\r",
+									"    \"amount\",\r",
+									"    \"paid_by\",\r",
+									"    \"expense_date\",\r",
+									"    \"expense_source\",\r",
+									"    \"created_date\"\r",
+									"  ]\r",
+									"}\r",
+									"var jsonResponse = pm.response.json();\r",
+									"pm.test('Schema is valid', function() {\r",
+									"  pm.expect(tv4.validate(jsonResponse, schema)).to.be.true;\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": " {\r\n        \"expense_type\": \"Flower\",\r\n        \"description\": \"This is Flower\",\r\n        \"amount\": 35,\r\n        \"paid_by\": \"Sharma\",\r\n        \"expense_date\": \"2024-03-17\",\r\n        \"expense_source\": \"Mahoneys\",\r\n        \"created_date\": \"2024-03-17\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{end-point}}",
+							"host": [
+								"{{end-point}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get_Expense_By_Id",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"end-point\", \"http://127.0.0.1:8000/expenses\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"jsonData = pm.response.json()\r",
+									"\r",
+									"//Check status code\r",
+									"pm.test(\"status code\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"    //pm.expect(pm.response.code).to.eql(200);\r",
+									"})\r",
+									"\r",
+									"pm.expect(jsonData.expense_id).to.equal(pm.environment.get(\"exp_id\"))\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{end-point}}/{{exp_id}}",
+							"host": [
+								"{{end-point}}"
+							],
+							"path": [
+								"{{exp_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update_Expense",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"end-point\", \"http://127.0.0.1:8000/expenses\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"jsonData = pm.response.json()\r",
+									"\r",
+									"//Check status code\r",
+									"pm.test(\"status code\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"    //pm.expect(pm.response.code).to.eql(200);\r",
+									"})\r",
+									"\r",
+									"//Check Response Message\r",
+									"pm.test(\"Response Message\", function(){\r",
+									"    pm.expect(jsonData.message).to.eql(\"Expense updated successfully\")\r",
+									"})\r",
+									"\r",
+									"\r",
+									"pm.expect(jsonData.expense_id).to.equal(pm.environment.get(\"exp_id\"))"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"expense_type\": \"Flower Pot\",\r\n    \"description\": \"This is Flower pot\",\r\n    \"amount\": 15.0,\r\n    \"paid_by\": \"Aastha Sharma\",\r\n    \"expense_date\": \"2024-03-18\",\r\n    \"expense_source\": \"Mahoneys Garden Center\",\r\n    \"created_date\": \"2024-03-19\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{end-point}}/{{exp_id}}",
+							"host": [
+								"{{end-point}}"
+							],
+							"path": [
+								"{{exp_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete_Expense",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.variables.set(\"end-point\", \"http://127.0.0.1:8000/expenses\")"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"jsonData = pm.response.json()\r",
+									"\r",
+									"//Check status code\r",
+									"pm.test(\"status code\", function(){\r",
+									"    pm.response.to.have.status(200)\r",
+									"    //pm.expect(pm.response.code).to.eql(200);\r",
+									"})\r",
+									"\r",
+									"//Check Response Message\r",
+									"pm.test(\"Response Message\", function(){\r",
+									"    pm.expect(jsonData.message).to.eql(\"Expense deleted successfully\")\r",
+									"})\r",
+									"\r",
+									"pm.expect(jsonData.expense_id).to.equal(pm.environment.get(\"exp_id\"))\r",
+									"\r",
+									"//unset environment variable\r",
+									"pm.environment.unset(\"exp_id\")\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{end-point}}/{{exp_id}}",
+							"host": [
+								"{{end-point}}"
+							],
+							"path": [
+								"{{exp_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
