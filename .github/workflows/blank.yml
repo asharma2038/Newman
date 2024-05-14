@@ -34,7 +34,7 @@ jobs:
       - name: Execute Postman Collection
         run: |
           #newman run Expense_Tracker_2024.postman_collection -e path/to/your/environment.json -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html  
-          newman run Expense_Tracker_2024.postman_collection --export-collection collection.json -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html 
+          newman run "Newman/Expense_Tracker_2024.postman_collection" --export-collection collection.json -r htmlextra --reporter-htmlextra-export SampleArtifact/report.html 
 
 
       #Publish the report
