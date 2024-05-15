@@ -1,10 +1,13 @@
 name: Run Postman Collection
 
 on:
+  schedule:
+    - cron: '0 21 * * *'  # Schedule the workflow to run at 9 PM every day
   push:
     branches: [ "main" ]  # Change this to your main branch name
   pull_request:
     branches: [ "main" ]
+ 
 
 #Allows you to run this workflow manually from the Action tab
   workflow_dispatch:
